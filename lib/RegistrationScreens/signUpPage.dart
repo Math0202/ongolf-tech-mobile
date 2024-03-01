@@ -5,10 +5,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:ongolf_tech/Home/HomePage.dart';
 import 'package:ongolf_tech/RegistrationScreens/MemberLogin.dart';
-import 'package:ongolf_tech/components/my_button.dart';
-import '../components/my_textfied.dart';
+import 'package:ongolf_tech/basic%20components/my_button.dart';
+import '../basic components/my_textfied.dart';
 
 class signUpPage extends StatefulWidget {
   const signUpPage({super.key});
@@ -112,6 +111,7 @@ Future<void> userDetails(String userId, String fullName, String clubName, int ha
       'Handicap': handicap,
       'Gender': gender,
       'User Name': userName,
+      'uid': userId,
     });
   } catch (e) {
     showDialog(
@@ -125,10 +125,9 @@ Future<void> userDetails(String userId, String fullName, String clubName, int ha
     );
   }
 }
-
 Future<void> uploadFile(String userId) async {
   if (pickedFile == null) return;
-  final path = 'users/$userId/profilepic/${pickedFile!.name}';
+  final path = 'clubs/$userId/profilepic/${pickedFile!.name}';
   final file = File(pickedFile!.path!);
   final ref = FirebaseStorage.instance.ref().child(path);
 
@@ -153,13 +152,13 @@ Future<void> uploadFile(String userId) async {
 }
 
 
-   Future selectFile() async {
-    final results = await FilePicker.platform.pickFiles();
-    if (results == null) return;
-    setState((){
-    pickedFile = results.files.first;
+Future<void> selectFile() async {
+  final result = await FilePicker.platform.pickFiles();
+  if (result == null) return;
+  setState(() {
+    pickedFile = result.files.first;
   });
-   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -234,13 +233,20 @@ Future<void> uploadFile(String userId) async {
               const SizedBox(height: 10 ),
 
             //image button
+            if(pickedFile != null)
+              Container(
+                height: 50,
+                width: 50,
+              color: Colors.green.shade200,
+              child: Image.file(
+                File(pickedFile!.path!),
+                fit: BoxFit.cover,
+              )
+              ),
             ElevatedButton(onPressed: selectFile, 
             child: Text('Select profile image')),
             SizedBox(height:10),
-            if(pickedFile != null)
-
-
-
+            
             // sign in buttom
             MyButton(
               onTap: signUp,
@@ -273,14 +279,7 @@ Future<void> uploadFile(String userId) async {
             ]
             ),
         )
-          ),
-    );
-          
+        ),
+    );       
   }
-     //sign user in
-   void signUserIn(){
-    Navigator.push(context, 
-    MaterialPageRoute(builder: (context)=> const HomePage()),
-    );
-   } 
 }

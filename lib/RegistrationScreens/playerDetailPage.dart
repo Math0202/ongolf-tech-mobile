@@ -4,9 +4,9 @@
 import 'package:flutter/material.dart';
 import 'package:ongolf_tech/Home/HomePage.dart';
 import 'package:ongolf_tech/RegistrationScreens/MemberLogin.dart';
-import 'package:ongolf_tech/components/my_button.dart';
+import 'package:ongolf_tech/basic%20components/my_button.dart';
 
-import '../components/my_textfied.dart';
+import '../basic components/my_textfied.dart';
 
 class PlayeDetailPage extends StatefulWidget {
   const PlayeDetailPage({super.key});

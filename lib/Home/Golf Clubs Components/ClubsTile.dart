@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ongolf_tech/Clubs%20page/clubs_page.dart';
+import 'package:ongolf_tech/Home/Golf%20Clubs%20Components/clubs_page.dart';
 
 class ClubsTile extends StatelessWidget {
   final String assetPath;
@@ -10,7 +10,7 @@ class ClubsTile extends StatelessWidget {
     Key? key, 
     required this.assetPath,
     required this.clubName,
-    required this.description,
+   required this.description,
     
     }):super(key: key);
 
@@ -36,7 +36,7 @@ class ClubsTile extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
-              image: AssetImage(assetPath),
+              image: NetworkImage(assetPath),
               fit: BoxFit.cover,
             ),
           ),
@@ -45,7 +45,7 @@ class ClubsTile extends StatelessWidget {
             padding: const EdgeInsets.all(3.0),
             child: Container(
               alignment: Alignment.bottomLeft,
-              child: Text('$clubName\n$description',
+              child: Text('$clubName',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,

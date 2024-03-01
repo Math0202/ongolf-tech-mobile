@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ongolf_tech/Home/Navigation%20Pages%20Components/Homecomponents/localRules.dart';
+import 'package:ongolf_tech/Scores/localRules.dart';
 
 class scoreCard extends StatefulWidget {
   const scoreCard({super.key});

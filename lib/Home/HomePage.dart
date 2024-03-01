@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ongolf_tech/Home/Navigation%20Pages%20Components/Community.dart';
-import 'package:ongolf_tech/Home/Distance%20and%20GPS/distance.dart';
-import 'package:ongolf_tech/Home/Navigation%20Pages%20Components/Eat&Drink.dart';
+import 'package:ongolf_tech/club%20management%20properties/club%20sign%20up.dart';
+import 'package:ongolf_tech/community/Community.dart';
+import 'package:ongolf_tech/Distance%20and%20GPS/distance.dart';
+import 'package:ongolf_tech/Eat&Drink/Eat&Drink.dart';
 import 'package:ongolf_tech/Home/Navigation%20Pages%20Components/Home.dart';
 import 'package:ongolf_tech/Home/Navigation%20Pages%20Components/Scores.dart';
 
@@ -62,7 +63,14 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     
-      floatingActionButton:  _selectedIndex == 3
+      floatingActionButton:  _selectedIndex == 0
+              ? FloatingActionButton(
+                  onPressed: addClub,
+                  backgroundColor: Colors.white,
+                  shape: CircleBorder(),
+                  child: const Icon(Icons.add_business, color: Colors.green),
+                )
+           : _selectedIndex == 3
               ? FloatingActionButton(
                   onPressed: cartButton,
                   backgroundColor: Colors.white,
@@ -76,6 +84,12 @@ class _HomePageState extends State<HomePage> {
   void notificationButton() {
     // Functionality for notification button
   }
+
+  void addClub(){
+  Navigator.push(context,
+  MaterialPageRoute(builder: (context) => ClubSignUp()));
+  }
+
   void cartButton() {}
   // ignore: unused_field
   static const String mapApiKey =

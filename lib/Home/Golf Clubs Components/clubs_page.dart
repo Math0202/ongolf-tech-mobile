@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:ongolf_tech/Clubs%20page/clubs_leader_boards.dart';
-import 'package:ongolf_tech/components/button.dart';
+import 'package:ongolf_tech/Home/Golf%20Clubs%20Components/clubs_leader_boards.dart';
+import 'package:ongolf_tech/basic%20components/button.dart';
 
 class ClubsPage extends StatefulWidget {
   final DataTableSource data1 = ClubLeaderBoardTable();
@@ -37,7 +37,15 @@ class _ClubsPageState extends State<ClubsPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-              Image.asset(widget.assetPath),
+             Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(widget.assetPath),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              height: 200,
+            ),
            Container(
             padding: const EdgeInsets.only(right:8),
             alignment: Alignment.centerRight,

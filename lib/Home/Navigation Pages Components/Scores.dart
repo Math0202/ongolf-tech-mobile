@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ongolf_tech/Home/Navigation%20Pages%20Components/Homecomponents/playerScoreTile.dart';
-import 'Homecomponents/scoreCard.dart';
+import 'package:ongolf_tech/Scores/playerScoreTile.dart';
+import '../../Scores/scoreCard.dart';
 
 class Scores extends StatefulWidget {
   const Scores({Key? key});

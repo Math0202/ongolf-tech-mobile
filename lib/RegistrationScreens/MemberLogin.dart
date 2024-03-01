@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ongolf_tech/Home/HomePage.dart';
 import 'package:ongolf_tech/RegistrationScreens/signUpPage.dart';
-import 'package:ongolf_tech/components/my_button.dart';
-import 'package:ongolf_tech/components/my_textfied.dart';
+import 'package:ongolf_tech/basic%20components/my_button.dart';
+import 'package:ongolf_tech/basic%20components/my_textfied.dart';
 
 class MemberLogin extends StatefulWidget {
   const MemberLogin({super.key});
@@ -18,23 +18,31 @@ class _MemberLoginState extends State<MemberLogin> {
        final emailController = TextEditingController();
        final passwordController = TextEditingController();
         Future<void> signUserIn() async {
+          showDialog(
+        context: context, 
+        builder: (context){
+       return Center(
+        child:  CircularProgressIndicator(),
+       );   
+        });
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
+        Navigator.of(context).pop();
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const HomePage()));
     } catch (e) {
       // Handle the exception
+      Navigator.of(context).pop();
       showDialog(
         context: context, 
         builder: (BuildContext context){
           return AlertDialog(
             title: Text('Sign-in error'),
-            content: Text('Email and password does not match any user.'),
+            content: Text(e.toString()),
           );
         });
-      
     }
   }
 
@@ -109,6 +117,7 @@ class _MemberLoginState extends State<MemberLogin> {
           
             // sign in buttom
            MyButton(
+            
               onTap: signUserIn,
               text: 'Sign In',
             ),

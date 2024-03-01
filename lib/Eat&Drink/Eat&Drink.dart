@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'Homecomponents/foodAndDrinksTile.dart';
+import 'foodAndDrinksTile.dart';
 
 class EatAndDrink extends StatefulWidget {
   const EatAndDrink({super.key});

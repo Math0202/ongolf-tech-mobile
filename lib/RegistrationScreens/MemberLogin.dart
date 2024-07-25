@@ -127,14 +127,14 @@ class _MemberLoginState extends State<MemberLogin> {
                       const SizedBox(height: 70 ),
           
             //not a member? register now
-            const Text('Not a memeber?'),
+            const Text('Not a memeber yet?'),
             const SizedBox(width: 5),
             GestureDetector(
               onTap: () {
                 Navigator.push(context,
                  MaterialPageRoute(builder: (context) => const signUpPage()));
               },
-              child: const Text('Register now?',
+              child: const Text('Register now.',
               style: TextStyle(color: Colors.blue, 
               fontWeight: FontWeight.bold,),
               ),

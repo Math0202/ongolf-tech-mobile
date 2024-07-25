@@ -26,7 +26,7 @@ class _RegistrationOptionsState extends State<RegistrationOptions> {
             
             // Header Text
             const Text(
-              'Membership sign up.',
+              'Which client are you?',
               style: TextStyle(
                 fontSize: 36,
                 fontWeight: FontWeight.bold,
@@ -50,7 +50,7 @@ class _RegistrationOptionsState extends State<RegistrationOptions> {
               onPressed: () => (context),
       
                 child: Text(
-                  'GOLF PLAYER',
+                  'Event organizer',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 26,
@@ -89,7 +89,7 @@ class _RegistrationOptionsState extends State<RegistrationOptions> {
               ),
               onPressed: () => navigateToMemberLogin(context),
                 child: Text(
-                  'Already a golf member?',
+                  'Golf player.',
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
                     fontSize: 20,

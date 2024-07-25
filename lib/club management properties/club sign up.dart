@@ -4,7 +4,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:ongolf_tech/Home/HomePage.dart';
 import 'package:ongolf_tech/RegistrationScreens/MemberLogin.dart';
 import 'package:ongolf_tech/basic%20components/my_button.dart';
 import '../basic components/my_textfied.dart';

@@ -29,8 +29,10 @@ class OutLinedButton1 extends StatelessWidget {
           title: Text('Sorry'),
           backgroundColor: Colors.green.shade300,
           content: Text('Nothing to show yet.'),
-          actions: <Widget>[
-            
+          actions: [
+            TextButton(onPressed: (){
+            Navigator.pop(context);
+            }, child: Text('Close'))
           ],
         );
         });

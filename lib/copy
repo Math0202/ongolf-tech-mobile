@@ -1,0 +1,142 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
+
+// Model class for event data
+class Event {
+  final String title;
+  final DateTime date;
+  final String description;
+
+  Event({required this.title, required this.date, required this.description});
+
+  // Convert a map to an Event object
+  factory Event.fromMap(Map<String, dynamic> map) {
+    return Event(
+      title: map['title'],
+      date: (map['date'] as Timestamp).toDate(),
+      description: map['description'],
+    );
+  }
+
+  @override
+  String toString() => title;
+}
+
+class EventPage extends StatefulWidget {
+  @override
+  _EventPageState createState() => _EventPageState();
+}
+
+class _EventPageState extends State<EventPage> {
+  // Stream of query snapshots from firestore
+  final Stream<QuerySnapshot> eventsStream =
+      FirebaseFirestore.instance.collection('events').snapshots();
+
+  // Calendar controller for TableCalendar widget
+  final CalendarController _calendarController = CalendarController();
+
+  // Focused day for TableCalendar widget
+  DateTime _focusedDay = DateTime.now();
+
+  // Selected day for TableCalendar widget
+  DateTime? _selectedDay;
+
+  // Value notifier for selected events
+  late final ValueNotifier<List<Event>> _selectedEvents;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDay = _focusedDay;
+    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _calendarController.dispose();
+    _selectedEvents.dispose();
+  }
+
+  // Get the events for a given day from the map of events
+  List<Event> _getEventsForDay(DateTime day) {
+    return _events[day] ?? [];
+  }
+
+  // Update the state when a day is selected
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    if (!isSameDay(_selectedDay, selectedDay)) {
+      setState(() {
+        _selectedDay = selectedDay;
+        _focusedDay = focusedDay;
+      });
+      _selectedEvents.value = _getEventsForDay(selectedDay);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: StreamBuilder<QuerySnapshot>(
+          stream: eventsStream,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: Text('Loading'),
+              );
+            }
+
+            // List of documents from firestore
+            var docs = snapshot.data!.docs;
+
+            // Map of events by date
+            Map<DateTime, List<Event>> _events = {};
+
+            // Loop over the documents and convert them to Event objects
+            for (var doc in docs) {
+              Event event = Event.fromMap(doc.data());
+              // Add the event to the map based on its date
+              _events[event.date] = _events[event.date] ?? [];
+              _events[event.date]!.add(event);
+            }
+
+            return Column(
+              children: [
+                Card(
+                  child: TableCalendar<Event>(
+                    firstDay: DateTime.utc(2020, 1, 1),
+                    lastDay: DateTime.utc(2030, 12, 31),
+                    focusedDay: _focusedDay,
+                    selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                    eventLoader: _getEventsForDay,
+                    calendarController: _calendarController,
+                    onDaySelected: _onDaySelected,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Expanded(
+                  child: ValueListenableBuilder<List<Event>>(
+                    valueListenable: _selectedEvents,
+                    builder: (context, value, _) {
+                      return ListView.builder(
+                        itemCount: value.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text('${value[index]}'),
+                            subtitle: Text('${value[index].description}'),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                )
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}

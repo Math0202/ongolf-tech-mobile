@@ -2,53 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ongolf_tech/Home/Golf%20Clubs%20Components/clubs_page.dart';
+import 'package:ongolf_tech/Home/Navigation%20Pages%20Components/Homecomponents/calendar/MyCalendar.dart';
 import 'package:ongolf_tech/Player%20components/player_profile.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../Golf Clubs Components/ClubsTile.dart';
 import 'Homecomponents/Weather.dart';
-
-class MyCalendar extends StatefulWidget {
-  final DateTime selectedDay;
-  final DateTime focusedDay;
-  final CalendarFormat calendarFormat;
-  final void Function(DateTime) onDaySelected;
-  final void Function(CalendarFormat) onFormatChanged;
-
-  const MyCalendar({
-    Key? key,
-    required this.selectedDay,
-    required this.focusedDay,
-    required this.calendarFormat,
-    required this.onDaySelected,
-    required this.onFormatChanged,
-  }) : super(key: key);
-
-  @override
-  _MyCalendarState createState() => _MyCalendarState();
-}
-
-class _MyCalendarState extends State<MyCalendar> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TableCalendar(
-          focusedDay: widget.focusedDay,
-          firstDay: DateTime.utc(2022, 3, 14),
-          lastDay: DateTime(2030, 11, 11),
-          startingDayOfWeek: StartingDayOfWeek.monday,
-          selectedDayPredicate: (day) {
-            return isSameDay(widget.selectedDay, day);
-          },
-        ),
-        const SizedBox(height: 8.0),
-        // Removed the event list
-      ],
-    );
-  }
-}
-// fetching club details
-
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -59,9 +17,9 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final ScrollController _scrollController = ScrollController();
-  DateTime _selectedDay = DateTime.now();
   final DateTime _focusedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.month;
+  final ValueNotifier<DateTime> _selectedDateNotifier = ValueNotifier<DateTime>(DateTime.now());
 
   @override
   Widget build(BuildContext context) {
@@ -72,12 +30,12 @@ class _HomeState extends State<Home> {
           child: Column(
             children: [
               SizedBox(
-                height: 50, // Adjust the height as needed
+                height: 50,
                 child: Container(
                   margin: EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15), // Adjust the radius as needed
-                    border: Border.all(color: Colors.grey), // Adjust the color as needed
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(color: Colors.grey),
                   ),
                   child: const Center(
                     child: TextField(
@@ -85,7 +43,7 @@ class _HomeState extends State<Home> {
                         border: InputBorder.none,
                         hintText: 'Search...',
                         prefixIcon: Icon(Icons.search),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 1), // Adjust padding as needed
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 1),
                       ),
                     ),
                   ),
@@ -116,11 +74,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
-
-           Container(
-                height: _containerHeight,
-              ),
-
+              const SizedBox(height: 230,),
               GestureDetector(
                 child: Container(
                   alignment: Alignment.bottomCenter,
@@ -146,44 +100,49 @@ class _HomeState extends State<Home> {
                             var club = snapshot.data!.docs[index];
                             
                           return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ClubsPage(
-                        assetPath: club['Profile Picture'],
-                        clubName: club['Club Name'],
-                        description: club['Club Discription'],
-                      ),
-                    ),
-                  );
-                },
-                child: ClubsTile(
-                  assetPath: club['Profile Picture'],
-                  clubName: club['Club Name'],
-                  description: club['Club Discription'],)
-                );
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ClubsPage(
+                                    assetPath: club['Profile Picture'],
+                                    clubName: club['Club Name'],
+                                    description: club['Club Discription'],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: ClubsTile(
+                              assetPath: club['Profile Picture'],
+                              clubName: club['Club Name'],
+                              description: club['Club Discription'],
+                            ),
+                          );
                           },
                         );
                       },
                     ),
                   ),
                 ),
-                
-                 ),
+              ),
               Column(
                 children: [
                   Container(
-                    color: Colors.white,
-                    child: MyCalendar(
-                      selectedDay: _selectedDay,
-                      focusedDay: _focusedDay,
-                      calendarFormat: _calendarFormat,
-                      onDaySelected: (selectedDay) {
-                        _handleDaySelected(selectedDay);
-                      },
-                      onFormatChanged: (format) {
-                        _handleFormatChanged(format);
+                    color: Colors.grey[200],
+                    child: ValueListenableBuilder<DateTime>(
+                      valueListenable: _selectedDateNotifier,
+                      builder: (context, selectedDate, _) {
+                        return MyCalendar(
+                          selectedDay: selectedDate,
+                          focusedDay: _focusedDay,
+                          calendarFormat: _calendarFormat,
+                          onDaySelected: (selectedDay) {
+                            _handleDaySelected(selectedDay);
+                          },
+                          onFormatChanged: (format) {
+                            _handleFormatChanged(format);
+                          },
+                        );
                       },
                     ),
                   ),
@@ -196,20 +155,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-  final double _containerHeight = 380;
-
-  void _handleDaySelected(DateTime selectedDay) {
-    setState(() {
-      _selectedDay = selectedDay;
-    });
-  }
-
-  void _handleFormatChanged(CalendarFormat format) {
-    setState(() {
-      _calendarFormat = format;
-    });
-  }
-
   Widget _buildProfileContainer() {
     return FutureBuilder<DocumentSnapshot>(
       future: getLoggedInUserDetails(),
@@ -220,21 +165,21 @@ class _HomeState extends State<Home> {
           }
           if (snapshot.hasData && snapshot.data!.exists) {
             Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
-            String imageUrl = data['Profile Picture'] ?? 'assets/RO.jpg'; // Use 'Profile Picture' field from Firestore
-            print('Image URL: $imageUrl'); // Debugging
+            String imageUrl = data['Profile Picture'] ?? 'assets/RO.jpg';
+            print('Image URL: $imageUrl');
             return GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => playerProfile(
-                    userName: data['User Name'], 
-                    handicap: data['Handicap'],
-                    profileImageUrl:imageUrl, 
-                    homeClub: data['Home club'],
-                    playerFullName: data['Full Name'] 
-                    )
+                      userName: data['User Name'],
+                      handicap: data['Handicap'],
+                      profileImageUrl:imageUrl,
+                      homeClub: data['Home club'],
+                      playerFullName: data['Full Name'],
                     ),
+                  ),
                 );
               },
               child: Stack(
@@ -257,7 +202,7 @@ class _HomeState extends State<Home> {
                             shape: BoxShape.circle,
                             color: Colors.black,
                             image: DecorationImage(
-                              image: NetworkImage(imageUrl), // Use NetworkImage for Firebase Storage URLs
+                              image: NetworkImage(imageUrl),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -287,6 +232,16 @@ class _HomeState extends State<Home> {
         }
       },
     );
+  }
+
+  void _handleDaySelected(DateTime selectedDay) {
+    _selectedDateNotifier.value = selectedDay;
+  }
+
+  void _handleFormatChanged(CalendarFormat format) {
+    setState(() {
+      _calendarFormat = format;
+    });
   }
 
   Future<DocumentSnapshot> getLoggedInUserDetails() async {

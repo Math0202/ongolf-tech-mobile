@@ -30,7 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  table_calendar: ^3.0.9
+  table_calendar: ^3.0.8
+  flutter_chat_ui:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -46,10 +47,22 @@ dependencies:
   flutter_svg:
   firebase_core:
   cloud_firestore:
-  file_picker: ^6.1.1
+  file_picker: ^4.2.8
   firebase_storage:
   firebase_app_check:
-  
+  universal_html: ^2.2.4
+  jiffy: ^4.1.0
+  firebase_helpers: ^0.6.1
+  url_launcher: 
+  image_picker: ^0.8.6
+  cached_network_image: ^3.2.0  
+  video_player: ^2.8.2
+  mime: ^1.0.0
+  path_provider: ^2.0.2
+  uri: ^1.0.0
+  timeago: 
+  image_gallery_saver: ^2.0.1
+  chewie: ^1.2.0
 
 
 dev_dependencies:
@@ -87,6 +100,11 @@ flutter:
   assets:
      - assets/
      - assets/Logo1.png
+     - assets/email.jpg
+     - assets/Facebook.jpg
+     - assets/Instagram.jpg
+     - assets/LinkedIn.jpg
+     - assets/WhatsApp.jpg
      
   #   - images/a_dot_ham.jpeg
 

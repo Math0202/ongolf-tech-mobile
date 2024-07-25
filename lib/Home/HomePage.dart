@@ -36,17 +36,18 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: Container(
-          alignment: Alignment.center,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/HS.jpg'),
-              fit: BoxFit.cover,
-            ),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/HS.jpg'),
+            fit: BoxFit.cover,
           ),
-          child: _pages[_selectedIndex],
+        ),
+        child: IndexedStack(
+          index: _selectedIndex,
+          children: _pages,
         ),
       ),
+      
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) => _navigateBottomBar(index),
@@ -63,14 +64,14 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     
-      floatingActionButton:  _selectedIndex == 0
-              ? FloatingActionButton(
+      floatingActionButton:   /*_selectedIndex == 0
+             ? FloatingActionButton(
                   onPressed: addClub,
                   backgroundColor: Colors.white,
                   shape: CircleBorder(),
                   child: const Icon(Icons.add_business, color: Colors.green),
                 )
-           : _selectedIndex == 3
+           : */_selectedIndex == 3
               ? FloatingActionButton(
                   onPressed: cartButton,
                   backgroundColor: Colors.white,
